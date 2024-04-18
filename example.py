@@ -8,16 +8,15 @@ from os import getenv
 
 from acapy_controller import Controller
 from acapy_controller.logging import logging_to_stdout
-from acapy_controller.protocols import connection, didexchange
+from acapy_controller.protocols import didexchange
 
-ALICE = getenv("ALICE", "http://alice:3001")
-BOB = getenv("BOB", "http://bob:3001")
+INVITER = getenv("INVITER", "http://alice:3001")
+INVITEE = getenv("INVITEE", "http://bob:3001")
 
 
 async def main():
     """Test Controller protocols."""
-    async with Controller(base_url=ALICE) as alice, Controller(base_url=BOB) as bob:
-        await connection(alice, bob)
+    async with Controller(base_url=INVITER) as alice, Controller(base_url=INVITEE) as bob:
         await didexchange(alice, bob)
 
 
