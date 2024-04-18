@@ -16,8 +16,16 @@ INVITEE = getenv("INVITEE", "http://bob:3001")
 
 async def main():
     """Test Controller protocols."""
-    async with Controller(base_url=INVITER) as alice, Controller(base_url=INVITEE) as bob:
-        await didexchange(alice, bob)
+    async with Controller(base_url=INVITER) as one, Controller(base_url=INVITEE) as two:
+        conn_1, conn_2 = await didexchange(one, two)
+        await one.post(
+            f"/transactions/{conn_1.connection_id}/set-endorser-role",
+            params={"transaction_my_job": "TRANSACTION_ENDORSER"}
+        )
+        await two.post(
+            f"/transactions/{conn_2.connection_id}/set-endorser-role",
+            params={"transactions_my_job": "TRANSACTION_AUTHOR"}
+        )
 
 
 if __name__ == "__main__":
